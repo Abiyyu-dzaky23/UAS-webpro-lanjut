@@ -5,33 +5,93 @@ export default function Orders() {
 
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("Semua");
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
-    const orders = [
+    const [orders, setOrders] = useState([
         {
             id: "ORD001",
             customer: "Abiyyu",
             product: "RTX 4060",
-            total: "Rp 8.000.000",
+            total: 8000000,
             status: "Diproses",
             payment: "Lunas",
+            date: "03/06/2026",
         },
         {
             id: "ORD002",
             customer: "Dzaky",
             product: "ASUS ROG",
-            total: "Rp 15.000.000",
+            total: 15000000,
             status: "Dikirim",
             payment: "Pending",
+            date: "03/06/2026",
         },
         {
             id: "ORD003",
             customer: "Rizky",
-            product: "Ryzen 7",
-            total: "Rp 5.000.000",
+            product: "Ryzen 7 5800X",
+            total: 5000000,
             status: "Selesai",
             payment: "Lunas",
+            date: "02/06/2026",
         },
-    ];
+    ]);
+
+    const formatRupiah = (angka) => {
+        return "Rp " + angka.toLocaleString("id-ID");
+    };
+
+    const tambahPesanan = () => {
+
+        const customer = prompt("Nama Customer");
+        if (!customer) return;
+
+        const product = prompt("Nama Produk");
+        if (!product) return;
+
+        const total = prompt("Total Harga");
+        if (!total) return;
+
+        const newOrder = {
+            id: "ORD" + Math.floor(Math.random() * 9999),
+            customer,
+            product,
+            total: Number(total),
+            status: "Diproses",
+            payment: "Pending",
+            date: new Date().toLocaleDateString(),
+        };
+
+        setOrders([...orders, newOrder]);
+    };
+
+    const hapusPesanan = (id) => {
+
+        if (window.confirm("Yakin ingin menghapus pesanan ini?")) {
+
+            setOrders(
+                orders.filter((order) => order.id !== id)
+            );
+
+        }
+
+    };
+
+    const updateStatus = (id, status) => {
+
+        setOrders(
+            orders.map((order) =>
+                order.id === id
+                    ? { ...order, status }
+                    : order
+            )
+        );
+
+    };
+
+    const detailPesanan = (order) => {
+        setSelectedOrder(order);
+    };
 
     const filteredOrders = orders.filter((order) => {
 
@@ -49,140 +109,191 @@ export default function Orders() {
 
     });
 
+    const totalPendapatan = orders.reduce(
+        (total, item) => total + item.total,
+        0
+    );
+
     return (
 
         <AdminLayout>
 
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-10">
+            <div className="space-y-8">
 
-                <div>
+                {/* HEADER */}
+                <div className="flex justify-between items-center">
 
-                    <h1 className="text-5xl font-black mb-2">
-                        📦 Data Pesanan
-                    </h1>
+                    <div>
 
-                    <p className="text-gray-500">
-                        Kelola seluruh transaksi marketplace
-                    </p>
+                        <h1 className="text-4xl font-bold">
+                            Manajemen Pesanan
+                        </h1>
 
-                </div>
+                        <p className="text-gray-500 mt-2">
+                            Kelola transaksi marketplace
+                        </p>
 
-                <button className="bg-black text-white px-6 py-3 rounded-2xl shadow-xl hover:scale-105 transition">
-                    + Tambah Pesanan
-                </button>
+                    </div>
 
-            </div>
-
-            {/* CARD */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-
-                <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-8 rounded-3xl shadow-xl">
-
-                    <h2 className="text-xl font-semibold">
-                        Total Pesanan
-                    </h2>
-
-                    <p className="text-5xl font-black mt-4">
-                        {orders.length}
-                    </p>
-
-                </div>
-
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-8 rounded-3xl shadow-xl">
-
-                    <h2 className="text-xl font-semibold">
-                        Diproses
-                    </h2>
-
-                    <p className="text-5xl font-black mt-4">
-                        {
-                            orders.filter(
-                                (o) => o.status === "Diproses"
-                            ).length
-                        }
-                    </p>
-
-                </div>
-
-                <div className="bg-gradient-to-r from-green-500 to-emerald-700 text-white p-8 rounded-3xl shadow-xl">
-
-                    <h2 className="text-xl font-semibold">
-                        Selesai
-                    </h2>
-
-                    <p className="text-5xl font-black mt-4">
-                        {
-                            orders.filter(
-                                (o) => o.status === "Selesai"
-                            ).length
-                        }
-                    </p>
-
-                </div>
-
-                <div className="bg-gradient-to-r from-purple-500 to-pink-600 text-white p-8 rounded-3xl shadow-xl">
-
-                    <h2 className="text-xl font-semibold">
-                        Pendapatan
-                    </h2>
-
-                    <p className="text-4xl font-black mt-4">
-                        Rp 28JT
-                    </p>
-
-                </div>
-
-            </div>
-
-            {/* SEARCH */}
-            <div className="bg-white rounded-3xl shadow-xl p-6 mb-10">
-
-                <div className="flex flex-col md:flex-row gap-4">
-
-                    <input
-                        type="text"
-                        placeholder="🔍 Cari customer..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="flex-1 p-4 rounded-2xl border border-gray-200"
-                    />
-
-                    <select
-                        value={filter}
-                        onChange={(e) => setFilter(e.target.value)}
-                        className="p-4 rounded-2xl border border-gray-200"
+                    <button
+                        onClick={tambahPesanan}
+                        className="bg-black text-white px-6 py-3 rounded-xl"
                     >
-
-                        <option>Semua</option>
-                        <option>Diproses</option>
-                        <option>Dikirim</option>
-                        <option>Selesai</option>
-
-                    </select>
+                        + Tambah Pesanan
+                    </button>
 
                 </div>
 
-            </div>
+                {/* CARD */}
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
 
-            {/* TABLE */}
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    <div className="bg-white border rounded-3xl p-6">
 
-                <div className="overflow-x-auto">
+                        <p className="text-gray-500 text-sm">
+                            Total Pesanan
+                        </p>
 
-                    <table className="w-full min-w-[1200px]">
+                        <h2 className="text-4xl font-bold mt-2">
+                            {orders.length}
+                        </h2>
 
-                        <thead className="bg-black text-white">
+                    </div>
+
+                    <div className="bg-white border rounded-3xl p-6">
+
+                        <p className="text-gray-500 text-sm">
+                            Diproses
+                        </p>
+
+                        <h2 className="text-4xl font-bold mt-2">
+                            {
+                                orders.filter(
+                                    (o) => o.status === "Diproses"
+                                ).length
+                            }
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white border rounded-3xl p-6">
+
+                        <p className="text-gray-500 text-sm">
+                            Dikirim
+                        </p>
+
+                        <h2 className="text-4xl font-bold mt-2">
+                            {
+                                orders.filter(
+                                    (o) => o.status === "Dikirim"
+                                ).length
+                            }
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white border rounded-3xl p-6">
+
+                        <p className="text-gray-500 text-sm">
+                            Selesai
+                        </p>
+
+                        <h2 className="text-4xl font-bold mt-2">
+                            {
+                                orders.filter(
+                                    (o) => o.status === "Selesai"
+                                ).length
+                            }
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white border rounded-3xl p-6">
+
+                        <p className="text-gray-500 text-sm">
+                            Pendapatan
+                        </p>
+
+                        <h2 className="text-2xl font-bold mt-2">
+                            {formatRupiah(totalPendapatan)}
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                {/* FILTER */}
+                <div className="bg-white border rounded-3xl p-6">
+
+                    <div className="flex flex-col md:flex-row gap-4">
+
+                        <input
+                            type="text"
+                            placeholder="Cari customer..."
+                            value={search}
+                            onChange={(e) =>
+                                setSearch(e.target.value)
+                            }
+                            className="flex-1 border rounded-xl p-4"
+                        />
+
+                        <select
+                            value={filter}
+                            onChange={(e) =>
+                                setFilter(e.target.value)
+                            }
+                            className="border rounded-xl p-4"
+                        >
+                            <option>Semua</option>
+                            <option>Diproses</option>
+                            <option>Dikirim</option>
+                            <option>Selesai</option>
+                            <option>Dibatalkan</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                {/* TABLE */}
+                <div className="bg-white border rounded-3xl overflow-hidden">
+
+                    <table className="w-full">
+
+                        <thead className="bg-gray-100">
 
                             <tr>
 
-                                <th className="p-5 text-left">ID Order</th>
-                                <th className="p-5 text-left">Customer</th>
-                                <th className="p-5 text-left">Produk</th>
-                                <th className="p-5 text-left">Total</th>
-                                <th className="p-5 text-left">Payment</th>
-                                <th className="p-5 text-left">Status</th>
-                                <th className="p-5 text-center">Action</th>
+                                <th className="p-5 text-left">
+                                    ID
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Customer
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Produk
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Total
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Payment
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Status
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Tanggal
+                                </th>
+
+                                <th className="p-5 text-center">
+                                    Action
+                                </th>
 
                             </tr>
 
@@ -194,14 +305,14 @@ export default function Orders() {
 
                                 <tr
                                     key={order.id}
-                                    className="border-b hover:bg-gray-50 transition"
+                                    className="border-b hover:bg-gray-50"
                                 >
 
-                                    <td className="p-5 font-bold">
+                                    <td className="p-5">
                                         {order.id}
                                     </td>
 
-                                    <td className="p-5">
+                                    <td className="p-5 font-medium">
                                         {order.customer}
                                     </td>
 
@@ -209,49 +320,57 @@ export default function Orders() {
                                         {order.product}
                                     </td>
 
-                                    <td className="p-5 font-bold text-green-600">
-                                        {order.total}
+                                    <td className="p-5">
+                                        {formatRupiah(order.total)}
+                                    </td>
+
+                                    <td className="p-5">
+                                        {order.payment}
                                     </td>
 
                                     <td className="p-5">
 
-                                        <span
-                                            className={
-                                                order.payment === "Lunas"
-                                                    ? "bg-green-500 text-white px-4 py-2 rounded-full text-sm"
-                                                    : "bg-red-500 text-white px-4 py-2 rounded-full text-sm"
+                                        <select
+                                            value={order.status}
+                                            onChange={(e) =>
+                                                updateStatus(
+                                                    order.id,
+                                                    e.target.value
+                                                )
                                             }
+                                            className="border rounded-lg px-3 py-2"
                                         >
-                                            {order.payment}
-                                        </span>
+                                            <option>Diproses</option>
+                                            <option>Dikirim</option>
+                                            <option>Selesai</option>
+                                            <option>Dibatalkan</option>
+                                        </select>
 
                                     </td>
 
                                     <td className="p-5">
-
-                                        <span
-                                            className={
-                                                order.status === "Selesai"
-                                                    ? "bg-green-500 text-white px-4 py-2 rounded-full text-sm"
-                                                    : order.status === "Dikirim"
-                                                    ? "bg-blue-500 text-white px-4 py-2 rounded-full text-sm"
-                                                    : "bg-yellow-500 text-white px-4 py-2 rounded-full text-sm"
-                                            }
-                                        >
-                                            {order.status}
-                                        </span>
-
+                                        {order.date}
                                     </td>
 
                                     <td className="p-5">
 
                                         <div className="flex justify-center gap-2">
 
-                                            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl">
+                                            <button
+                                                onClick={() =>
+                                                    detailPesanan(order)
+                                                }
+                                                className="border px-4 py-2 rounded-xl"
+                                            >
                                                 Detail
                                             </button>
 
-                                            <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl">
+                                            <button
+                                                onClick={() =>
+                                                    hapusPesanan(order.id)
+                                                }
+                                                className="bg-black text-white px-4 py-2 rounded-xl"
+                                            >
                                                 Hapus
                                             </button>
 
@@ -271,7 +390,75 @@ export default function Orders() {
 
             </div>
 
+            {selectedOrder && (
+
+<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+
+    <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg p-8">
+
+        <h2 className="text-3xl font-bold text-center mb-8">
+            Detail Pesanan
+        </h2>
+
+        <div className="space-y-4">
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">ID Pesanan</span>
+                <span>{selectedOrder.id}</span>
+            </div>
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">Customer</span>
+                <span>{selectedOrder.customer}</span>
+            </div>
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">Produk</span>
+                <span>{selectedOrder.product}</span>
+            </div>
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">Total</span>
+                <span>
+                    {formatRupiah(selectedOrder.total)}
+                </span>
+            </div>
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">Pembayaran</span>
+                <span>{selectedOrder.payment}</span>
+            </div>
+
+            <div className="flex justify-between border-b pb-3">
+                <span className="font-medium">Status</span>
+
+                <span className="px-3 py-1 rounded-full bg-gray-100 text-sm">
+                    {selectedOrder.status}
+                </span>
+            </div>
+
+            <div className="flex justify-between">
+                <span className="font-medium">Tanggal</span>
+                <span>{selectedOrder.date}</span>
+            </div>
+
+        </div>
+
+        <button
+            onClick={() => setSelectedOrder(null)}
+            className="w-full mt-8 bg-black text-white py-3 rounded-xl hover:bg-gray-800"
+        >
+            Tutup
+        </button>
+
+    </div>
+
+</div>
+
+)}
+
         </AdminLayout>
 
     );
+
 }

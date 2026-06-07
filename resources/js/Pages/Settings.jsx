@@ -1,83 +1,152 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Settings() {
 
-    const [storeName, setStoreName] = useState("PC Marketplace");
-    const [email, setEmail] = useState("admin@pcstore.com");
-    const [phone, setPhone] = useState("081234567890");
-    const [address, setAddress] = useState("Purwokerto, Jawa Tengah");
+    const [storeName, setStoreName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    useEffect(() => {
+
+        const data = JSON.parse(
+            localStorage.getItem("settings")
+        );
+
+        if (data) {
+
+            setStoreName(data.storeName);
+            setEmail(data.email);
+            setPhone(data.phone);
+            setAddress(data.address);
+
+        } else {
+
+            setStoreName("PC Marketplace");
+            setEmail("admin@pcstore.com");
+            setPhone("081234567890");
+            setAddress("Purwokerto, Jawa Tengah");
+
+        }
+
+    }, []);
+
+    const simpanPerubahan = () => {
+
+        localStorage.setItem(
+            "settings",
+            JSON.stringify({
+                storeName,
+                email,
+                phone,
+                address,
+            })
+        );
+
+        alert("Pengaturan berhasil disimpan!");
+
+    };
+
+    const updatePassword = () => {
+
+        if (
+            !oldPassword ||
+            !newPassword ||
+            !confirmPassword
+        ) {
+            alert("Lengkapi semua password");
+            return;
+        }
+
+        if (
+            newPassword !== confirmPassword
+        ) {
+            alert("Konfirmasi password tidak cocok");
+            return;
+        }
+
+        alert("Password berhasil diperbarui");
+
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+
+    };
 
     return (
+
         <AdminLayout>
 
             <div className="space-y-8">
 
-                <div>
+                <div className="bg-white border rounded-3xl p-8 shadow-sm">
 
-                    <h1 className="text-5xl font-black mb-2">
-                        ⚙️ Pengaturan Toko
+                    <h1 className="text-4xl font-bold">
+                        Pengaturan Toko
                     </h1>
 
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 mt-2">
                         Kelola informasi marketplace dan akun admin
                     </p>
 
                 </div>
 
-                {/* CARD INFO */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white border rounded-3xl p-6">
 
-                        <h2 className="text-gray-500">
+                        <p className="text-gray-500">
                             Total Produk
-                        </h2>
+                        </p>
 
-                        <p className="text-5xl font-black mt-3">
+                        <h2 className="text-4xl font-bold mt-3">
                             150
-                        </p>
+                        </h2>
 
                     </div>
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white border rounded-3xl p-6">
 
-                        <h2 className="text-gray-500">
+                        <p className="text-gray-500">
                             Customer
-                        </h2>
-
-                        <p className="text-5xl font-black mt-3 text-blue-500">
-                            350
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            350
+                        </h2>
 
                     </div>
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white border rounded-3xl p-6">
 
-                        <h2 className="text-gray-500">
+                        <p className="text-gray-500">
                             Pendapatan
-                        </h2>
-
-                        <p className="text-5xl font-black mt-3 text-green-500">
-                            Rp 500JT
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            Rp 500JT
+                        </h2>
 
                     </div>
 
                 </div>
 
-                {/* PROFILE */}
-                <div className="bg-white rounded-3xl shadow-xl p-8">
+                <div className="bg-white border rounded-3xl p-8">
 
-                    <h2 className="text-3xl font-bold mb-6">
-                        👤 Profil Toko
+                    <h2 className="text-2xl font-bold mb-6">
+                        Profil Toko
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         <div>
 
-                            <label className="font-bold">
+                            <label className="block mb-2 font-medium">
                                 Nama Toko
                             </label>
 
@@ -85,16 +154,18 @@ export default function Settings() {
                                 type="text"
                                 value={storeName}
                                 onChange={(e) =>
-                                    setStoreName(e.target.value)
+                                    setStoreName(
+                                        e.target.value
+                                    )
                                 }
-                                className="w-full border p-4 rounded-xl mt-2"
+                                className="w-full border rounded-xl p-4"
                             />
 
                         </div>
 
                         <div>
 
-                            <label className="font-bold">
+                            <label className="block mb-2 font-medium">
                                 Email
                             </label>
 
@@ -102,16 +173,18 @@ export default function Settings() {
                                 type="email"
                                 value={email}
                                 onChange={(e) =>
-                                    setEmail(e.target.value)
+                                    setEmail(
+                                        e.target.value
+                                    )
                                 }
-                                className="w-full border p-4 rounded-xl mt-2"
+                                className="w-full border rounded-xl p-4"
                             />
 
                         </div>
 
                         <div>
 
-                            <label className="font-bold">
+                            <label className="block mb-2 font-medium">
                                 No HP
                             </label>
 
@@ -119,16 +192,18 @@ export default function Settings() {
                                 type="text"
                                 value={phone}
                                 onChange={(e) =>
-                                    setPhone(e.target.value)
+                                    setPhone(
+                                        e.target.value
+                                    )
                                 }
-                                className="w-full border p-4 rounded-xl mt-2"
+                                className="w-full border rounded-xl p-4"
                             />
 
                         </div>
 
                         <div>
 
-                            <label className="font-bold">
+                            <label className="block mb-2 font-medium">
                                 Alamat
                             </label>
 
@@ -136,26 +211,30 @@ export default function Settings() {
                                 type="text"
                                 value={address}
                                 onChange={(e) =>
-                                    setAddress(e.target.value)
+                                    setAddress(
+                                        e.target.value
+                                    )
                                 }
-                                className="w-full border p-4 rounded-xl mt-2"
+                                className="w-full border rounded-xl p-4"
                             />
 
                         </div>
 
                     </div>
 
-                    <button className="mt-6 bg-black text-white px-8 py-4 rounded-xl">
+                    <button
+                        onClick={simpanPerubahan}
+                        className="mt-6 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800"
+                    >
                         Simpan Perubahan
                     </button>
 
                 </div>
 
-                {/* PASSWORD */}
-                <div className="bg-white rounded-3xl shadow-xl p-8">
+                <div className="bg-white border rounded-3xl p-8">
 
-                    <h2 className="text-3xl font-bold mb-6">
-                        🔒 Ubah Password
+                    <h2 className="text-2xl font-bold mb-6">
+                        Ubah Password
                     </h2>
 
                     <div className="space-y-4">
@@ -163,24 +242,45 @@ export default function Settings() {
                         <input
                             type="password"
                             placeholder="Password Lama"
-                            className="w-full border p-4 rounded-xl"
+                            value={oldPassword}
+                            onChange={(e) =>
+                                setOldPassword(
+                                    e.target.value
+                                )
+                            }
+                            className="w-full border rounded-xl p-4"
                         />
 
                         <input
                             type="password"
                             placeholder="Password Baru"
-                            className="w-full border p-4 rounded-xl"
+                            value={newPassword}
+                            onChange={(e) =>
+                                setNewPassword(
+                                    e.target.value
+                                )
+                            }
+                            className="w-full border rounded-xl p-4"
                         />
 
                         <input
                             type="password"
                             placeholder="Konfirmasi Password Baru"
-                            className="w-full border p-4 rounded-xl"
+                            value={confirmPassword}
+                            onChange={(e) =>
+                                setConfirmPassword(
+                                    e.target.value
+                                )
+                            }
+                            className="w-full border rounded-xl p-4"
                         />
 
                     </div>
 
-                    <button className="mt-6 bg-red-500 text-white px-8 py-4 rounded-xl">
+                    <button
+                        onClick={updatePassword}
+                        className="mt-6 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800"
+                    >
                         Update Password
                     </button>
 
@@ -189,5 +289,6 @@ export default function Settings() {
             </div>
 
         </AdminLayout>
+
     );
 }

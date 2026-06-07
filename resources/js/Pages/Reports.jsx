@@ -1,35 +1,49 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 
+import {
+    ResponsiveContainer,
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    Tooltip,
+    CartesianGrid,
+    BarChart,
+    Bar,
+} from "recharts";
+
 export default function Reports() {
 
-    const reports = [
+    const salesData = [
+        { month: "Jan", sales: 20 },
+        { month: "Feb", sales: 35 },
+        { month: "Mar", sales: 45 },
+        { month: "Apr", sales: 70 },
+        { month: "Mei", sales: 55 },
+        { month: "Jun", sales: 90 },
+    ];
+
+    const productData = [
         {
-            month: "Januari",
-            sales: "250 Produk",
-            revenue: "Rp 120JT",
-            status: "Naik",
+            name: "RTX 4060",
+            sold: 120,
         },
         {
-            month: "Februari",
-            sales: "180 Produk",
-            revenue: "Rp 90JT",
-            status: "Stabil",
+            name: "ASUS ROG",
+            sold: 80,
         },
         {
-            month: "Maret",
-            sales: "300 Produk",
-            revenue: "Rp 150JT",
-            status: "Naik",
+            name: "Ryzen 7",
+            sold: 60,
         },
         {
-            month: "April",
-            sales: "220 Produk",
-            revenue: "Rp 110JT",
-            status: "Turun",
+            name: "SSD NVME",
+            sold: 45,
         },
     ];
 
     return (
+
         <AdminLayout>
 
             <div className="space-y-8">
@@ -37,257 +51,171 @@ export default function Reports() {
                 {/* HEADER */}
                 <div>
 
-                    <h1 className="text-5xl font-black mb-2">
-                        📊 Laporan Penjualan
+                    <h1 className="text-4xl font-bold">
+                        Laporan Penjualan
                     </h1>
 
-                    <p className="text-gray-500">
-                        Statistik dan performa marketplace
+                    <p className="text-gray-500 mt-2">
+                        Statistik marketplace secara realtime
                     </p>
 
                 </div>
 
                 {/* CARD */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-                    <div className="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-3xl p-8 shadow-xl">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-xl">
-                            Total Penjualan
-                        </h2>
-
-                        <p className="text-5xl font-black mt-4">
-                            1.250
-                        </p>
-
-                    </div>
-
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-3xl p-8 shadow-xl">
-
-                        <h2 className="text-xl">
+                        <p className="text-gray-500">
                             Pendapatan
-                        </h2>
-
-                        <p className="text-5xl font-black mt-4">
-                            Rp 500JT
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            Rp 250JT
+                        </h2>
 
                     </div>
 
-                    <div className="bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-3xl p-8 shadow-xl">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-xl">
-                            Produk Terjual
-                        </h2>
-
-                        <p className="text-5xl font-black mt-4">
-                            890
+                        <p className="text-gray-500">
+                            Pesanan
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            320
+                        </h2>
 
                     </div>
 
-                    <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-3xl p-8 shadow-xl">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-xl">
-                            Customer Aktif
-                        </h2>
+                        <p className="text-gray-500">
+                            Customer
+                        </p>
 
-                        <p className="text-5xl font-black mt-4">
+                        <h2 className="text-4xl font-bold mt-3">
                             350
+                        </h2>
+
+                    </div>
+
+                    <div className="bg-white rounded-3xl border p-6">
+
+                        <p className="text-gray-500">
+                            Produk
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            150
+                        </h2>
 
                     </div>
 
                 </div>
 
-                {/* GRAFIK */}
-                <div className="bg-white rounded-3xl shadow-xl p-8">
+                {/* GRAFIK PENJUALAN */}
+                <div className="bg-white rounded-3xl border p-8">
 
-                    <div className="flex justify-between items-center mb-8">
+                    <h2 className="text-2xl font-bold mb-6">
+                        Grafik Penjualan Bulanan
+                    </h2>
 
-                        <h2 className="text-3xl font-bold">
-                            📈 Grafik Penjualan Bulanan
-                        </h2>
+                    <div className="h-96">
 
-                        <button className="bg-black text-white px-6 py-3 rounded-xl">
-                            Export PDF
-                        </button>
+                        <ResponsiveContainer>
 
-                    </div>
+                            <LineChart data={salesData}>
 
-                    <div className="space-y-6">
+                                <CartesianGrid strokeDasharray="3 3" />
 
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span>Januari</span>
-                                <span>80%</span>
-                            </div>
+                                <XAxis dataKey="month" />
 
-                            <div className="w-full bg-gray-200 h-6 rounded-full">
-                                <div className="bg-green-500 h-6 rounded-full w-4/5"></div>
-                            </div>
-                        </div>
+                                <YAxis />
 
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span>Februari</span>
-                                <span>65%</span>
-                            </div>
+                                <Tooltip />
 
-                            <div className="w-full bg-gray-200 h-6 rounded-full">
-                                <div className="bg-blue-500 h-6 rounded-full w-2/3"></div>
-                            </div>
-                        </div>
+                                <Line
+                                    type="monotone"
+                                    dataKey="sales"
+                                    stroke="#000"
+                                    strokeWidth={4}
+                                />
 
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span>Maret</span>
-                                <span>90%</span>
-                            </div>
+                            </LineChart>
 
-                            <div className="w-full bg-gray-200 h-6 rounded-full">
-                                <div className="bg-yellow-500 h-6 rounded-full w-11/12"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between mb-2">
-                                <span>April</span>
-                                <span>75%</span>
-                            </div>
-
-                            <div className="w-full bg-gray-200 h-6 rounded-full">
-                                <div className="bg-red-500 h-6 rounded-full w-3/4"></div>
-                            </div>
-                        </div>
+                        </ResponsiveContainer>
 
                     </div>
 
                 </div>
 
                 {/* PRODUK TERLARIS */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-3xl border p-8">
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <h2 className="text-2xl font-bold mb-6">
+                        Produk Terlaris
+                    </h2>
 
-                        <h2 className="font-bold text-xl mb-3">
-                            🥇 Produk Terlaris
-                        </h2>
+                    <div className="h-96">
 
-                        <p className="text-3xl font-black">
-                            RTX 4060
-                        </p>
+                        <ResponsiveContainer>
 
-                        <p className="text-gray-500 mt-2">
-                            320 Unit Terjual
-                        </p>
+                            <BarChart data={productData}>
 
-                    </div>
+                                <CartesianGrid strokeDasharray="3 3" />
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                                <XAxis dataKey="name" />
 
-                        <h2 className="font-bold text-xl mb-3">
-                            💰 Pendapatan Hari Ini
-                        </h2>
+                                <YAxis />
 
-                        <p className="text-3xl font-black text-green-500">
-                            Rp 12JT
-                        </p>
+                                <Tooltip />
 
-                    </div>
+                                <Bar
+                                    dataKey="sold"
+                                    fill="#111827"
+                                />
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                            </BarChart>
 
-                        <h2 className="font-bold text-xl mb-3">
-                            📦 Order Hari Ini
-                        </h2>
-
-                        <p className="text-3xl font-black text-blue-500">
-                            25 Order
-                        </p>
+                        </ResponsiveContainer>
 
                     </div>
 
                 </div>
 
-                {/* TABLE */}
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                {/* TOP CUSTOMER */}
+                <div className="bg-white rounded-3xl border p-8">
 
-                    <table className="w-full">
+                    <h2 className="text-2xl font-bold mb-6">
+                        Customer Terbaik
+                    </h2>
 
-                        <thead className="bg-black text-white">
+                    <div className="space-y-4">
 
-                            <tr>
+                        <div className="flex justify-between border-b pb-3">
+                            <span>Abiyyu</span>
+                            <span>Rp 20JT</span>
+                        </div>
 
-                                <th className="p-5 text-left">
-                                    Bulan
-                                </th>
+                        <div className="flex justify-between border-b pb-3">
+                            <span>Dzaky</span>
+                            <span>Rp 15JT</span>
+                        </div>
 
-                                <th className="p-5 text-left">
-                                    Total Penjualan
-                                </th>
+                        <div className="flex justify-between border-b pb-3">
+                            <span>Rizky</span>
+                            <span>Rp 10JT</span>
+                        </div>
 
-                                <th className="p-5 text-left">
-                                    Pendapatan
-                                </th>
-
-                                <th className="p-5 text-left">
-                                    Status
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            {reports.map((item, index) => (
-
-                                <tr
-                                    key={index}
-                                    className="border-b hover:bg-gray-50"
-                                >
-
-                                    <td className="p-5">
-                                        {item.month}
-                                    </td>
-
-                                    <td className="p-5">
-                                        {item.sales}
-                                    </td>
-
-                                    <td className="p-5">
-                                        {item.revenue}
-                                    </td>
-
-                                    <td className="p-5">
-
-                                        <span
-                                            className={
-                                                item.status === "Naik"
-                                                    ? "bg-green-500 text-white px-4 py-2 rounded-full"
-                                                    : item.status === "Stabil"
-                                                    ? "bg-yellow-500 text-white px-4 py-2 rounded-full"
-                                                    : "bg-red-500 text-white px-4 py-2 rounded-full"
-                                            }
-                                        >
-                                            {item.status}
-                                        </span>
-
-                                    </td>
-
-                                </tr>
-
-                            ))}
-
-                        </tbody>
-
-                    </table>
+                    </div>
 
                 </div>
 
             </div>
 
         </AdminLayout>
+
     );
+
 }

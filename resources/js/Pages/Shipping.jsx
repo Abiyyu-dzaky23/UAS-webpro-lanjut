@@ -3,114 +3,230 @@ import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Shipping() {
 
+    const [search, setSearch] = useState("");
+
     const [shipping, setShipping] = useState([
         {
-            id: 1,
-            resi: "JNE001",
+            id: "SHP001",
+            order: "ORD001",
             customer: "Abiyyu",
             courier: "JNE",
-            product: "RTX 4060",
+            receipt: "JNE123456",
+            status: "Diproses",
+        },
+        {
+            id: "SHP002",
+            order: "ORD002",
+            customer: "Dzaky",
+            courier: "J&T",
+            receipt: "JT987654",
             status: "Dikirim",
         },
         {
-            id: 2,
-            resi: "JNT002",
-            customer: "Dzaky",
-            courier: "J&T",
-            product: "Laptop ASUS ROG",
-            status: "Sampai",
-        },
-        {
-            id: 3,
-            resi: "SICEPAT003",
-            customer: "Rafly",
+            id: "SHP003",
+            order: "ORD003",
+            customer: "Rizky",
             courier: "SiCepat",
-            product: "Ryzen 7",
-            status: "Diproses",
+            receipt: "SC555888",
+            status: "Selesai",
         },
     ]);
 
-    const updateStatus = (id, statusBaru) => {
+    const tambahPengiriman = () => {
+
+        const customer = prompt("Nama Customer");
+        if (!customer) return;
+
+        const courier = prompt(
+            "Kurir (JNE / J&T / SiCepat)"
+        );
+
+        if (!courier) return;
+
+        const receipt = prompt("Nomor Resi");
+
+        if (!receipt) return;
+
+        const data = {
+            id: "SHP" + Math.floor(Math.random() * 9999),
+            order: "ORD" + Math.floor(Math.random() * 9999),
+            customer,
+            courier,
+            receipt,
+            status: "Diproses",
+        };
+
+        setShipping([...shipping, data]);
+
+    };
+
+    const hapusPengiriman = (id) => {
+
+        if (confirm("Hapus data pengiriman?")) {
+
+            setShipping(
+                shipping.filter(
+                    (item) => item.id !== id
+                )
+            );
+
+        }
+
+    };
+
+    const updateStatus = (id, status) => {
 
         setShipping(
             shipping.map((item) =>
                 item.id === id
-                    ? { ...item, status: statusBaru }
+                    ? { ...item, status }
                     : item
             )
         );
+
     };
 
+    const filteredShipping = shipping.filter(
+        (item) =>
+            item.customer
+                .toLowerCase()
+                .includes(search.toLowerCase()) ||
+            item.receipt
+                .toLowerCase()
+                .includes(search.toLowerCase())
+    );
+
     return (
+
         <AdminLayout>
 
             <div className="space-y-8">
 
                 {/* HEADER */}
-                <div>
+                <div className="flex justify-between items-center">
 
-                    <h1 className="text-5xl font-black mb-2">
-                        🚚 Data Pengiriman
-                    </h1>
+                    <div>
 
-                    <p className="text-gray-500">
-                        Monitoring status pengiriman customer
-                    </p>
+                        <h1 className="text-4xl font-bold">
+                            Pengiriman
+                        </h1>
+
+                        <p className="text-gray-500 mt-2">
+                            Kelola seluruh pengiriman produk
+                        </p>
+
+                    </div>
+
+                    <button
+                        onClick={tambahPengiriman}
+                        className="bg-black text-white px-6 py-3 rounded-xl"
+                    >
+                        + Tambah Pengiriman
+                    </button>
 
                 </div>
 
                 {/* CARD */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-gray-500 text-xl">
+                        <p className="text-gray-500">
                             Total Pengiriman
-                        </h2>
-
-                        <p className="text-5xl font-black mt-4">
-                            200
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            {shipping.length}
+                        </h2>
 
                     </div>
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-gray-500 text-xl">
-                            Sedang Dikirim
-                        </h2>
-
-                        <p className="text-5xl font-black mt-4 text-yellow-500">
-                            45
+                        <p className="text-gray-500">
+                            Diproses
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            {
+                                shipping.filter(
+                                    (s) =>
+                                        s.status ===
+                                        "Diproses"
+                                ).length
+                            }
+                        </h2>
 
                     </div>
 
-                    <div className="bg-white rounded-3xl shadow-xl p-8">
+                    <div className="bg-white rounded-3xl border p-6">
 
-                        <h2 className="text-gray-500 text-xl">
-                            Paket Sampai
+                        <p className="text-gray-500">
+                            Dikirim
+                        </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            {
+                                shipping.filter(
+                                    (s) =>
+                                        s.status ===
+                                        "Dikirim"
+                                ).length
+                            }
                         </h2>
 
-                        <p className="text-5xl font-black mt-4 text-green-500">
-                            155
+                    </div>
+
+                    <div className="bg-white rounded-3xl border p-6">
+
+                        <p className="text-gray-500">
+                            Selesai
                         </p>
+
+                        <h2 className="text-4xl font-bold mt-3">
+                            {
+                                shipping.filter(
+                                    (s) =>
+                                        s.status ===
+                                        "Selesai"
+                                ).length
+                            }
+                        </h2>
 
                     </div>
 
                 </div>
 
+                {/* SEARCH */}
+                <div className="bg-white rounded-3xl border p-6">
+
+                    <input
+                        type="text"
+                        placeholder="Cari customer atau resi..."
+                        value={search}
+                        onChange={(e) =>
+                            setSearch(e.target.value)
+                        }
+                        className="w-full border rounded-xl p-4"
+                    />
+
+                </div>
+
                 {/* TABLE */}
-                <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div className="bg-white rounded-3xl border overflow-hidden">
 
                     <table className="w-full">
 
-                        <thead className="bg-black text-white">
+                        <thead className="bg-gray-100">
 
                             <tr>
 
                                 <th className="p-5 text-left">
-                                    Resi
+                                    ID
+                                </th>
+
+                                <th className="p-5 text-left">
+                                    Order
                                 </th>
 
                                 <th className="p-5 text-left">
@@ -122,7 +238,7 @@ export default function Shipping() {
                                 </th>
 
                                 <th className="p-5 text-left">
-                                    Produk
+                                    Resi
                                 </th>
 
                                 <th className="p-5 text-left">
@@ -139,15 +255,19 @@ export default function Shipping() {
 
                         <tbody>
 
-                            {shipping.map((item) => (
+                            {filteredShipping.map((item) => (
 
                                 <tr
                                     key={item.id}
                                     className="border-b hover:bg-gray-50"
                                 >
 
-                                    <td className="p-5 font-bold">
-                                        {item.resi}
+                                    <td className="p-5">
+                                        {item.id}
+                                    </td>
+
+                                    <td className="p-5">
+                                        {item.order}
                                     </td>
 
                                     <td className="p-5">
@@ -158,55 +278,54 @@ export default function Shipping() {
                                         {item.courier}
                                     </td>
 
-                                    <td className="p-5">
-                                        {item.product}
+                                    <td className="p-5 font-semibold">
+                                        {item.receipt}
                                     </td>
 
                                     <td className="p-5">
 
-                                        <span
-                                            className={
-                                                item.status === "Sampai"
-                                                    ? "bg-green-500 text-white px-4 py-2 rounded-full"
-                                                    : item.status === "Dikirim"
-                                                    ? "bg-blue-500 text-white px-4 py-2 rounded-full"
-                                                    : "bg-yellow-500 text-white px-4 py-2 rounded-full"
+                                        <select
+                                            value={item.status}
+                                            onChange={(e) =>
+                                                updateStatus(
+                                                    item.id,
+                                                    e.target.value
+                                                )
                                             }
+                                            className="border rounded-lg px-3 py-2"
                                         >
-                                            {item.status}
-                                        </span>
+                                            <option>
+                                                Diproses
+                                            </option>
+
+                                            <option>
+                                                Dikirim
+                                            </option>
+
+                                            <option>
+                                                Selesai
+                                            </option>
+
+                                            <option>
+                                                Dibatalkan
+                                            </option>
+
+                                        </select>
 
                                     </td>
 
                                     <td className="p-5">
 
-                                        <div className="flex gap-2 justify-center">
-
-                                            <button
-                                                onClick={() =>
-                                                    updateStatus(
-                                                        item.id,
-                                                        "Dikirim"
-                                                    )
-                                                }
-                                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl"
-                                            >
-                                                Kirim
-                                            </button>
-
-                                            <button
-                                                onClick={() =>
-                                                    updateStatus(
-                                                        item.id,
-                                                        "Sampai"
-                                                    )
-                                                }
-                                                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
-                                            >
-                                                Sampai
-                                            </button>
-
-                                        </div>
+                                        <button
+                                            onClick={() =>
+                                                hapusPengiriman(
+                                                    item.id
+                                                )
+                                            }
+                                            className="bg-black text-white px-4 py-2 rounded-xl"
+                                        >
+                                            Hapus
+                                        </button>
 
                                     </td>
 
@@ -223,5 +342,7 @@ export default function Shipping() {
             </div>
 
         </AdminLayout>
+
     );
+
 }
